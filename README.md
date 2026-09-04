@@ -34,53 +34,15 @@ bash
 python non_asym.py
 This will:
 
-Generate training/validation/test data from y = sin(2πx) + ε.
+Generate training/validation/test data from y = sin(2πx) + ε, with ε ~ N(0, 0.1²).
 
 Train a neural network (100 hidden units, ReLU) for 500 epochs.
 
-Estimate constants 
-σ
-^
-2
-,
-L
-^
-0
-,
-q
-^
-,
-g
-^
-σ
-^
-  
-2
- , 
-L
-^
-  
-0
-​
- , 
-q
-^
-​
- , 
-g
-^
-​
-  from the SGD trajectory.
+Estimate constants σ²_hat, L0_hat, q_hat from the SGD trajectory.
 
-Compute the theoretical threshold 
-γ
-γ.
+Compute the theoretical threshold γ(n).
 
-Apply the stopping rule with 
-δ
-=
-0.2
-δ=0.2 (Scenario 1 – achievable accuracy).
+Apply the stopping rule with δ = 0.2 (Scenario 1 – achievable accuracy).
 
 If the stopping time is found, the model at that epoch is used for conformal calibration on the validation set.
 
@@ -107,16 +69,9 @@ Standardize features.
 
 Train a neural network (50 hidden units, ReLU, weight decay) for 500 epochs.
 
-Estimate constants and compute 
-γ
-γ.
+Estimate constants and compute γ(n).
 
-Apply the stopping rule with 
-δ
-=
-10
-%
-δ=10% of the standard deviation of the validation target, with min_models=50 and warmup_epochs=50.
+Apply the stopping rule with δ = 10% of the standard deviation of the validation target, with min_models=50 and warmup_epochs=50.
 
 Outputs:
 
@@ -125,13 +80,15 @@ boston_experiment_results.csv – epoch‑wise width and final metrics.
 boston_experiment_plot.png – figure showing width evolution and conformal intervals on test data.
 
 Results
-The results presented in the paper are fully reproducible. Expected outputs:
+The results presented in the paper are fully reproducible. Expected outputs (based on the corrected version of the paper):
 
-Synthetic (δ=0.2): stopping time ~30 epochs, test coverage ~95.7%.
+Synthetic (δ = 0.2): stopping time ~160 epochs, test coverage ~98.3%.
 
-Synthetic (δ=0.05): no stopping (training continues to 500 epochs), coverage ~97.5%.
+Synthetic (δ = 0.05): no stopping (training continues to 500 epochs), coverage ~97.5%.
 
-Boston Housing (δ=0.1·std): no stopping, coverage ~96.1%.
+Boston Housing (δ = 0.1·std): no stopping, coverage ~96.1%.
+
+Note: The stopping rule is heuristic and motivated by theory; rigorous finite‑sample guarantees are provided only by the conformal prediction step (which uses a separate calibration subset, not used for model selection).
 
 License
 This project is licensed under the MIT License – see the LICENSE file for details.
